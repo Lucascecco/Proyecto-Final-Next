@@ -3,12 +3,14 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import StarRating from "../ui/star-rating";
+import { Button } from "@mantine/core";
 
 type Props = {
   name: string;
   image: string;
   price: number;
   rating: number;
+  ratingCount: number;
   discountedPrice: number;
   productSlug: string;
 };
@@ -18,13 +20,14 @@ export default function ItemCard({
   image,
   price,
   rating,
+  ratingCount,
   discountedPrice,
   productSlug,
 }: Props) {
   return (
-    <div className="relative m-2 flex max-w-xs my-2 flex-col overflow-hidden rounded-lg border border-gray-100 bg-white shadow-md">
+    <div className="h-full relative m-1 flex max-w-xs my-2 flex-col overflow-hidden rounded-lg border border-gray-100 bg-white shadow-md">
       <Link
-        className="relative mx-3 mt-3 flex h-60 overflow-hidden rounded-xl"
+        className="relative mx-3 mt-3 flex h-60 overflow-hidden rounded-xl grow"
         href={`/store/products/id/${productSlug}`}
       >
         <Image
@@ -44,15 +47,16 @@ export default function ItemCard({
         <Link href={`/store/products/id/${productSlug}`}>
           <h5 className="text-xl tracking-tight text-slate-900">{name}</h5>
         </Link>
-        <div className="mt-2 mb-5 flex items-center justify-between">
+          <StarRating rating={rating} count={ratingCount} />
+        <div className="mt-2 mb-5 flex items-center ">
           <p>
             {discountedPrice == 0 ? (
-              <span className="text-3xl font-bold text-slate-900">
+              <span className="text-2xl font-bold text-slate-900">
                 ${price}
               </span>
             ) : (
               <>
-                <span className="text-3xl font-bold text-slate-900">
+                <span className="text-2xl font-bold text-slate-900">
                   ${discountedPrice}
                 </span>
                 <span className="text-sm text-slate-900 line-through">
@@ -61,15 +65,11 @@ export default function ItemCard({
               </>
             )}
           </p>
-          <StarRating rating={rating} />
         </div>
-        <a
-          href="#"
-          className="flex items-center justify-center rounded-md bg-slate-900 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-blue-300"
-        >
+        <Button radius="xl" className="w-full" style={{ flex: 1 }}>
           <ShoppingCart className="mr-2 h-5 w-5" aria-hidden="true" />
           Agregar al Carrito
-        </a>
+          </Button>
       </div>
     </div>
   );

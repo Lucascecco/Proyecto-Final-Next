@@ -1,16 +1,44 @@
+import {
+  IconStar,
+  IconStarFilled,
+  IconStarHalf,
+  IconStarHalfFilled,
+  IconStarOff,
+} from "@tabler/icons-react";
 import { Star } from "lucide-react";
-import React from "react";
+import React, { ReactNode } from "react";
 
 type Props = {
   rating: number;
+  count: number;
 };
 
-export default function StarRating({ rating }: Props) {
+export default function StarRating({ rating, count }: Props) {
+  const round = Math.round(rating * 2) / 2;
+  const stars: ReactNode[] = [];
+
+  function addStar(icon: ReactNode) {
+    stars.push(icon);
+  }
+
+  for (let i = 0; i < 5; i++) {
+    if (i < Math.trunc(round)) {
+      addStar(<IconStarFilled key={i} size={16} />);
+    } else {
+      if (round - i == 0.5) {
+        addStar(<IconStarHalfFilled key={i} size={16} />);
+      } else {
+        addStar(<IconStar key={i} size={16} />);
+      }
+    }
+  }
   return (
-    <div className="flex items-center">
-      <span className="mr-2 ml-3 rounded text-slate-900 bg-yellow-200 px-2.5 py-0.5 text-xs font-semibold">
-        {rating}
-      </span>
-    </div>
+    <span className="text-slate-900 text-xs font-semibold">
+      <div className="flex items-center ">
+        <span className="text-gray-500 mr-1">{rating}</span>
+        {stars}
+        <span className="text-gray-500 ml-1">({count})</span>
+      </div>
+    </span>
   );
 }

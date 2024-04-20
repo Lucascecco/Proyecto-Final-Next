@@ -1,5 +1,5 @@
 import ProductList from "@/app/components/product-list/product-list";
-import { mockData } from "@/app/mock-data";
+import { ProductType, mockData } from "@/app/mock-data";
 import { capitalizeAndSeparate } from "@/lib/utils";
 import { Metadata } from "next";
 import React from "react";
@@ -16,10 +16,12 @@ type Props = {
   };
 };
 
-export default function CategoryPage({ params }: Props) {
-  let products = mockData().filter(
-    (product) => product.category == params.category
-  );
+export default async function CategoryPage({ params }: Props) {
+  const products = await fetch("http://localhost:3000/api/products", {
+    cache: "no-store",
+  }).then(async (res) => (await res.json()).filter(
+    (product: ProductType) => product.category == params.category
+  ));
 
   if (products) {
     return (

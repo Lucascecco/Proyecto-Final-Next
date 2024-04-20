@@ -1,9 +1,6 @@
-import React from 'react'
+import React from "react";
+import NothingFoundBackground from "./components/mantine/not-found/nothing-found-background";
 
-type Props = {}
-
-export default function NotFound({}: Props) {
-  return (
-    <h1 className='title m-4'>Recurso no Encontrado</h1>
-  )
+export default function NotFound() {
+  return <NothingFoundBackground />;
 }

@@ -5,6 +5,8 @@ import React from "react";
 import StarRating from "../ui/star-rating";
 import ItemQuantity from "./item-quantity";
 import Link from "next/link";
+import { Button } from "@mantine/core";
+import { IconCreditCard, IconGlobe, IconWorld } from "@tabler/icons-react";
 
 type Props = {
   product: ProductType;
@@ -31,11 +33,11 @@ export default function ItemDetail({ product }: Props) {
 
             <div className="mt-5 flex items-center">
               <div className="flex items-center">
-                <StarRating rating={product.rating.rate} />
+                <StarRating
+                  rating={product.rating.rate}
+                  count={product.rating.count}
+                />
               </div>
-              <p className="ml-2 text-sm font-medium text-gray-500">
-                {product.rating.count} Reviews
-              </p>
             </div>
 
             <div className="mt-5 flex items-center">
@@ -58,22 +60,23 @@ export default function ItemDetail({ product }: Props) {
               </div>
 
               <Link
-                className="inline-flex items-center justify-center rounded-md border-2 border-transparent bg-gray-900 bg-none px-12 py-3 text-center text-base font-bold text-white transition-all duration-200 ease-in-out focus:shadow hover:bg-gray-800"
                 href={"/store/cart"}
               >
-                <ShoppingCart className="mr-2 h-5 w-5" aria-hidden="true" />
-                Agregar al carrito
+                <Button radius="xl" className="w-full" style={{ flex: 1 }}>
+                  <ShoppingCart className="mr-2 h-5 w-5" aria-hidden="true" />
+                  Agregar al carrito
+                </Button>
               </Link>
             </div>
 
             <ul className="mt-8 space-y-2">
               <li className="flex items-center text-left text-sm font-medium text-gray-600">
-                <Globe className="mr-2" />
+                <IconWorld className="mr-2" />
                 Envío Internacional
               </li>
 
               <li className="flex items-center text-left text-sm font-medium text-gray-600">
-                <CreditCard className="mr-2" />
+                <IconCreditCard className="mr-2" />
                 Cancela en cualquier momento
               </li>
             </ul>
