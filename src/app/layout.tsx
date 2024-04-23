@@ -1,13 +1,10 @@
+import { ColorSchemeScript, MantineProvider } from "@mantine/core";
+import "@mantine/core/styles.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import "./globals.css";
-import Header from "./components/ui/header";
-import "@mantine/core/styles.css";
-import {
-  ColorSchemeScript,
-  MantineProvider,
-} from "@mantine/core";
+import { CartProvider } from "./components/context/cart-context";
 import { HeaderMegaMenu } from "./components/mantine/header/header-mega-menu";
+import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -35,10 +32,12 @@ export default function RootLayout({
         <ColorSchemeScript />
       </head>
       <body className="flex flex-col bg-gray-100">
-        <MantineProvider forceColorScheme="light">
-          <HeaderMegaMenu />
-          <main>{children}</main>
-        </MantineProvider>
+        <CartProvider>
+          <MantineProvider forceColorScheme="light">
+            <HeaderMegaMenu />
+            <main>{children}</main>
+          </MantineProvider>
+        </CartProvider>
       </body>
     </html>
   );

@@ -8,6 +8,7 @@ type Props = {};
 export default function HomePage({}: Props) {
   return (
     <section className="flex justify-center items-center flex-1 flex-grow flex-col">
+      <div className="h-[60px]" />
       <h1 className="text-3xl font-bold m-12">Bienvenido a CoderStore</h1>
 
       <Group justify="center">

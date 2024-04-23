@@ -1,9 +1,23 @@
-import { ProductType, mockData } from "@/app/mock-data";
-import { NextResponse } from "next/server";
+import { db } from "@/lib/firebase";
+import { ProductType } from "@/lib/utils";
+import { collection, getDocs, query, where } from "firebase/firestore";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(): Promise<NextResponse<ProductType[]>> {
-  await new Promise((resolve) => {
-    setTimeout(resolve, 1000);
-  });
-  return NextResponse.json(mockData());
+export async function GET(
+  request: NextRequest
+): Promise<NextResponse<ProductType[]>> {
+  const searchParams = request.nextUrl.searchParams;
+  const category = searchParams.get("category");
+
+  const productsCollection = collection(db, "products");
+  const productQuery = category
+    ? query(productsCollection, where("category", "==", category))
+    : productsCollection;
+  const querySnapshot = await getDocs(productQuery);
+  const docs = querySnapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  })) as ProductType[];
+
+  return NextResponse.json(docs);
 }

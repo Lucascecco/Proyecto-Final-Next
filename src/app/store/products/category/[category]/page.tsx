@@ -1,14 +1,27 @@
 import ProductList from "@/app/components/product-list/product-list";
-import { ProductType, mockData } from "@/app/mock-data";
-import { capitalizeAndSeparate } from "@/lib/utils";
+import { getCategories } from "@/lib/utils";
+import { Loader } from "@mantine/core";
 import { Metadata } from "next";
-import React from "react";
+import React, { Suspense } from "react";
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const categories = await getCategories();
+
   return {
-    title: capitalizeAndSeparate(params.category),
+    title: categories.find((category) => category.id === params.category)?.label,
   };
 }
+
+export async function generateStaticParams() {
+  return [
+    {category: "mens-clothing"},
+    {category: "womens-clothing"},
+    {category: "jewelery"},
+    {category: "electronics"},
+  ]
+}
+
+export const revalidate = 3600;
 
 type Props = {
   params: {
@@ -16,19 +29,21 @@ type Props = {
   };
 };
 
-export default async function CategoryPage({ params }: Props) {
-  const products = await fetch("http://localhost:3000/api/products", {
-    cache: "no-store",
-  }).then(async (res) => (await res.json()).filter(
-    (product: ProductType) => product.category == params.category
-  ));
-
-  if (products) {
-    return (
-      <>
-        <h1 className="title m-4">{capitalizeAndSeparate(params.category)}</h1>
-        <ProductList products={products} />
-      </>
-    );
-  }
+export default function CategoryPage({ params }: Props) {
+  return (
+    <>
+      <Suspense
+        fallback={
+          <Loader
+            className="flex items-center justify-center w-full h-96"
+            size={80}
+            color="blue"
+            type="dots"
+          />
+        }
+      >
+        <ProductList category={params.category}/>
+      </Suspense>
+    </>
+  );
 }

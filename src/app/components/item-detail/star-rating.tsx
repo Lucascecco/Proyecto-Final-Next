@@ -1,12 +1,9 @@
 import {
   IconStar,
   IconStarFilled,
-  IconStarHalf,
   IconStarHalfFilled,
-  IconStarOff,
 } from "@tabler/icons-react";
-import { Star } from "lucide-react";
-import React, { ReactNode } from "react";
+import { ReactNode } from "react";
 
 type Props = {
   rating: number;

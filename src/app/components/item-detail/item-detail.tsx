@@ -1,12 +1,12 @@
-import { ProductType } from "@/app/mock-data";
-import { CreditCard, Globe, ShoppingCart } from "lucide-react";
+import { ProductType } from "@/lib/utils";
 import Image from "next/image";
 import React from "react";
-import StarRating from "../ui/star-rating";
+import StarRating from "./star-rating";
 import ItemQuantity from "./item-quantity";
-import Link from "next/link";
-import { Button } from "@mantine/core";
-import { IconCreditCard, IconGlobe, IconWorld } from "@tabler/icons-react";
+import {
+  IconCreditCard,
+  IconWorld,
+} from "@tabler/icons-react";
 
 type Props = {
   product: ProductType;
@@ -15,9 +15,9 @@ type Props = {
 export default function ItemDetail({ product }: Props) {
   return (
     <section className="py-6">
-      <div className="container mx-auto px-4">
-        <div className="lg:col-gap-12 xl:col-gap-16 mt-8 grid grid-cols-1 gap-12 lg:mt-12 lg:grid-cols-5 lg:gap-16">
-          <div className="lg:col-span-3 lg:row-end-1">
+      <div className="container px-4">
+        <div className="mt-8 grid grid-cols-1 gap-6 md:mt-12 md:grid-cols-2">
+          <div className="flex lg:row-end-1 justify-center xl:justify-start">
             <Image
               src={product.image}
               className="object-contain"
@@ -32,41 +32,34 @@ export default function ItemDetail({ product }: Props) {
             <h1 className="title">{product.title}</h1>
 
             <div className="mt-5 flex items-center">
-              <div className="flex items-center">
-                <StarRating
-                  rating={product.rating.rate}
-                  count={product.rating.count}
-                />
-              </div>
+              <StarRating
+                rating={product.rating.rate}
+                count={product.rating.count}
+              />
             </div>
 
-            <div className="mt-5 flex items-center">
-              <ItemQuantity />
-            </div>
+            <span className="mt-1 flex items-center text-gray-500 text-sm font-semibold">
+              Stock: {product.stock}
+            </span>
 
             <div className="mt-10 flex flex-col items-center justify-between space-y-4 border-t border-b py-4 sm:flex-row sm:space-y-0">
               <div className="flex items-end">
                 <h1 className="text-3xl font-bold">
                   $
                   {product.discountedPrice != 0
-                    ? product.discountedPrice
-                    : product.price}
+                    ? product.discountedPrice.toFixed(2)
+                    : product.price.toFixed(2)}
                 </h1>
                 {product.discountedPrice != 0 && (
                   <span className="text-base line-through">
-                    ${product.price}
+                    ${product.price.toFixed(2)}
                   </span>
                 )}
               </div>
 
-              <Link
-                href={"/store/cart"}
-              >
-                <Button radius="xl" className="w-full" style={{ flex: 1 }}>
-                  <ShoppingCart className="mr-2 h-5 w-5" aria-hidden="true" />
-                  Agregar al carrito
-                </Button>
-              </Link>
+              <div className="mt-5 flex items-center">
+                <ItemQuantity product={product} stock={product.stock} />
+              </div>
             </div>
 
             <ul className="mt-8 space-y-2">
@@ -82,6 +75,10 @@ export default function ItemDetail({ product }: Props) {
             </ul>
           </div>
         </div>
+        <hr className="my-8" />
+
+        <h1 className="title">Descripción</h1>
+        <p className="my-4">{product.description}</p>
       </div>
     </section>
   );

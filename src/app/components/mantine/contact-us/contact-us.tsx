@@ -1,21 +1,26 @@
 "use client";
 
 import {
+  Button,
+  Group,
+  Modal,
   Paper,
+  SimpleGrid,
   Text,
   TextInput,
   Textarea,
-  Button,
-  Group,
-  SimpleGrid,
-  Box,
 } from "@mantine/core";
-import { ContactIconsList } from "./contact-icons";
-import bg from "/public/bg.svg";
-import classes from "./contact-us.module.css";
 import { useState } from "react";
+import { ContactIconsList } from "./contact-icons";
+import classes from "./contact-us.module.css";
+import bg from "/public/bg.svg";
+import { useRouter } from "next/navigation";
+import { useDisclosure } from "@mantine/hooks";
 
 export function ContactUs() {
+  const [opened, { open, close }] = useDisclosure(false);
+  const [error, setError] = useState("");
+  const router = useRouter();
   const [values, setValues] = useState({
     name: "",
     email: "",
@@ -34,13 +39,19 @@ export function ContactUs() {
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    await fetch("/api/contact", {
+    const response = await fetch("/api/contact", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(values),
-    })
+    }).then((res) => res.json());
+    if (response.error) {
+      setError(response.error);
+      open();
+    } else {
+      router.push("/contact/success");
+    }
   };
 
   return (
@@ -48,6 +59,19 @@ export function ContactUs() {
       justify="center"
       className="h-screen flex items-center justify-center"
     >
+      <Modal opened={opened} onClose={close} title="Error">
+        <p>{error}</p>
+        <div className="flex flex-row justify-between gap-4 m-4">
+          <Button
+            onClick={() => {
+              close();
+            }}
+            className="grow"
+          >
+            Ok
+          </Button>
+        </div>
+      </Modal>
       <Paper shadow="md" radius="lg">
         <div className={classes.wrapper}>
           <div
@@ -72,6 +96,7 @@ export function ContactUs() {
                   name="name"
                   label="Nombre"
                   placeholder="Nombre"
+                  required
                   onChange={handleChange}
                 />
                 <TextInput
@@ -98,6 +123,7 @@ export function ContactUs() {
                 label="Su mensaje"
                 placeholder="Por favor incluya toda la información relevante"
                 minRows={3}
+                required
                 onChange={handleChange}
               />
 

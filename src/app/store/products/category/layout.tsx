@@ -1,19 +1,23 @@
 import React from "react";
-import { Separator } from "@/components/ui/separator"
+import { NavbarSimple } from "@/app/components/mantine/navbar-simple/navbar-simple";
+import { getCategories } from "@/lib/utils";
 
 type Props = {
   children: React.ReactNode;
   params: {
     category: string;
-  }
+  };
 };
 
-export default function CategoryLayout({ children, params }: Props) {
+export default async function CategoryLayout({ children, params }: Props) {
+  const categories = await getCategories()
+
   return (
     <section>
-      <h1 className="title m-4">Categorías</h1>
-      <Separator />
-      {children}
+      <div>
+        <NavbarSimple title="Categorías" buttons={categories} />
+        {children}
+      </div>
     </section>
   );
 }
