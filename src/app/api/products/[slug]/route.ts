@@ -1,7 +1,6 @@
 import { db } from "@/lib/firebase";
-import { ProductType } from "@/lib/utils";
-import { doc, getDoc } from "firebase/firestore";
-import { revalidatePath } from "next/cache";
+import { ProductType } from "@/lib/actions";
+import { deleteDoc, doc, getDoc } from "firebase/firestore";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
@@ -17,8 +16,6 @@ export async function GET(
   const docRef = doc(db, "products", params.slug);
   const docSnapshot = await getDoc(docRef);
 
-  revalidatePath("/api/products/[slug]");
-
   if (docSnapshot.exists()) {
     return NextResponse.json({
       id: docSnapshot.id,
@@ -30,4 +27,14 @@ export async function GET(
       { status: 404 }
     );
   }
+}
+
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: { slug: string } }
+) {
+  const productRef = doc(db, "products", params.slug);
+  await deleteDoc(productRef);
+
+  return NextResponse.json("OK");
 }

@@ -5,6 +5,7 @@ import { Inter } from "next/font/google";
 import { CartProvider } from "./components/context/cart-context";
 import { HeaderMegaMenu } from "./components/mantine/header/header-mega-menu";
 import "./globals.css";
+import { AuthProvider } from "./components/context/auth-context";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -32,12 +33,14 @@ export default function RootLayout({
         <ColorSchemeScript />
       </head>
       <body className="flex flex-col bg-gray-100">
-        <CartProvider>
-          <MantineProvider forceColorScheme="light">
-            <HeaderMegaMenu />
-            <main>{children}</main>
-          </MantineProvider>
-        </CartProvider>
+        <AuthProvider>
+          <CartProvider>
+            <MantineProvider forceColorScheme="light">
+              <HeaderMegaMenu />
+              <main>{children}</main>
+            </MantineProvider>
+          </CartProvider>
+        </AuthProvider>
       </body>
     </html>
   );

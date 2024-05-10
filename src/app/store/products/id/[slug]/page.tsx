@@ -1,5 +1,5 @@
 import ItemDetail from "@/app/components/item-detail/item-detail";
-import { getProduct } from "@/lib/utils";
+import { getProduct } from "@/lib/actions";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import React from "react";

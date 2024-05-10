@@ -8,7 +8,6 @@ type Props = {
     updateTotal: (price: number) => void;
 };
 
-// eslint-disable-next-line @next/next/no-async-client-component
 export default function CartList({updateTotal}: Props) {
   const { cart } = useCartContext();
   updateTotal(cart.reduce((acc, item) => acc + (item.product.discountedPrice > 0 ? item.product.discountedPrice : item.product.price) * item.quantity, 0));

@@ -2,37 +2,56 @@
 
 import React, { useState } from "react";
 import CartList from "./cart-list";
-import { Button, Modal } from "@mantine/core";
+import { Button, Group, Modal } from "@mantine/core";
 import { IconTrash, IconArrowRight } from "@tabler/icons-react";
 import { useDisclosure } from "@mantine/hooks";
 import { useCartContext } from "../context/cart-context";
+import { useAuthContext } from "../context/auth-context";
+import { makeOrder } from "@/lib/actions";
+import ConfirmationModal from "../modals/confirmation-modal";
+import NotificationModal from "../modals/notification-modal";
 
 type Props = {};
 
 export default function Cart({}: Props) {
   const [total, setTotal] = useState(0);
   const [opened, { open, close }] = useDisclosure(false);
-  const { resetCart } = useCartContext();
+  const [openedSuccess, { open: openSuccess, close: closeSuccess }] =
+    useDisclosure(false);
+  const { cart, resetCart } = useCartContext();
+  const { user } = useAuthContext();
+
+  const handleOrder = async () => {
+    if (user && user.email && user.name) {
+      await makeOrder({
+        products: cart.map(({ product, quantity }) => ({
+          slug: product.id,
+          quantity,
+        })),
+        user: {
+          uid: user.uid,
+          email: user.email,
+          name: user.name,
+        },
+        total,
+      });
+      resetCart();
+      openSuccess();
+    }
+  };
 
   return (
     <>
-      <Modal opened={opened} onClose={close} title="¿Está seguro?">
-        <p>¿Está seguro de borrar el carrito?</p>
-        <div className="flex flex-row justify-between gap-4 m-4">
-          <Button onClick={close} variant="default" className="grow">
-            No
-          </Button>
-          <Button
-            onClick={() => {
-              close();
-              resetCart();
-            }}
-            className="grow"
-          >
-            Sí
-          </Button>
-        </div>
-      </Modal>
+      <ConfirmationModal
+        opened={opened}
+        close={close}
+        handleConfirmation={resetCart}
+        title="¿Está seguro de que quiere borrar el carrito?"
+      />
+      <NotificationModal opened={openedSuccess} close={closeSuccess} title="Orden Procesada">
+        <p className="text-center">¡Su orden ha sido procesada correctamente!</p>
+        <p className="text-center">Gracias por confiar en nosotros</p>
+      </NotificationModal>
       <div className="flex items-center justify-center">
         <CartList updateTotal={setTotal} />
       </div>
@@ -44,13 +63,13 @@ export default function Cart({}: Props) {
         </p>
       </div>
 
-      <div className="flex flex-row gap-4 mt-6 text-center">
+      <Group className="flex flex-row gap-4 mt-6 text-center w-full">
         <Button
           size="xl"
           radius="xl"
           variant="default"
           onClick={open}
-          className="group inline-flex w-full items-center justify-center rounded-md text-lg font-semiboldfocus:shadow"
+          className="group grow inline-flex items-center justify-center rounded-md text-lg font-semibold focus:shadow"
         >
           Borrar Carrito
           <IconTrash className="ml-2 my-96 h-6 w-6" />
@@ -58,12 +77,20 @@ export default function Cart({}: Props) {
         <Button
           size="xl"
           radius="xl"
-          className="group inline-flex w-full items-center justify-center rounded-md text-lg font-semibold focus:shadow"
+          className="group grow inline-flex items-center justify-center rounded-md text-lg font-semibold focus:shadow"
+          onClick={handleOrder}
+          {...(total === 0 || !user ? { disabled: true } : { disabled: false })}
         >
-          Pagar
-          <IconArrowRight className="ml-2 my-96 h-6 w-6" />
+          {user && user.logged ? (
+            <>
+              Realizar Orden
+              <IconArrowRight className="ml-2 my-96 h-6 w-6" />
+            </>
+          ) : (
+            "Debes iniciar sesión"
+          )}
         </Button>
-      </div>
+      </Group>
     </>
   );
 }

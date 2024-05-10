@@ -5,19 +5,19 @@ import { IconShoppingCart } from "@tabler/icons-react";
 import Link from "next/link";
 import React, { useState } from "react";
 import { useCartContext } from "../context/cart-context";
-import { ProductType } from "@/lib/utils";
+import { ProductType } from "@/lib/actions";
+import AddToCartButton from "../product-list/add-to-cart-button";
 
 type Props = {
   product: ProductType;
-  stock: number;
 };
 
-export default function ItemQuantity({ product, stock }: Props) {
+export default function ItemQuantity({ product }: Props) {
   const [counter, setCounter] = useState(1);
   const { addToCart } = useCartContext();
 
   function handleIncrease() {
-    if (counter < stock) {
+    if (counter < product.stock) {
       setCounter(counter + 1);
     }
   }
@@ -30,8 +30,8 @@ export default function ItemQuantity({ product, stock }: Props) {
 
   function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
     const value = parseInt(event.target.value);
-    if (value > stock) {
-      setCounter(stock);
+    if (value > product.stock) {
+      setCounter(product.stock);
     } else {
       setCounter(value);
     }
@@ -53,12 +53,13 @@ export default function ItemQuantity({ product, stock }: Props) {
         </Button>
       </div>
 
-      <Link href={"/cart"} onClick={handleClick}>
+      <Link href={"/cart"} onClick={handleClick} aria-disabled={product.stock === 0}>
         <div>
-          <Button radius="xl" className="w-full" style={{ flex: 1 }}>
-            <IconShoppingCart className="mr-2" />
-            Agregar al carrito
-          </Button>
+          <AddToCartButton
+            product={product}
+            quantity={counter}
+            disabled={product.stock <= 0}
+          />
         </div>
       </Link>
     </div>

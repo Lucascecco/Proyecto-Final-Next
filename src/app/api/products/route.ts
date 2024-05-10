@@ -1,5 +1,5 @@
 import { db } from "@/lib/firebase";
-import { ProductType } from "@/lib/utils";
+import { ProductType } from "@/lib/actions";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { NextRequest, NextResponse } from "next/server";
 

@@ -1,7 +1,6 @@
 import React from "react";
 import ItemCard from "./item-card";
-import { ProductType } from "@/lib/utils";
-import { getProducts } from "@/lib/utils";
+import { ProductType, getProducts } from "@/lib/actions";
 
 type Props = { category?: string };
 

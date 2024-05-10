@@ -3,6 +3,10 @@ import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 
+export const metadata = {
+  title: "Bienvenido",
+};
+
 type Props = {};
 
 export default function HomePage({}: Props) {
@@ -13,7 +17,7 @@ export default function HomePage({}: Props) {
 
       <Group justify="center">
         <Link href="/store">
-          <Button size="xl">
+          <Button radius={"xl"} size="xl">
             Ir a la Tienda
             <ArrowRight className="ml-2 h-6 w-6" />
           </Button>

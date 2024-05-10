@@ -1,5 +1,5 @@
 import ProductList from "@/app/components/product-list/product-list";
-import { getCategories } from "@/lib/utils";
+import { getCategories } from "@/lib/actions";
 import { Loader } from "@mantine/core";
 import { Metadata } from "next";
 import React, { Suspense } from "react";
@@ -10,15 +10,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: categories.find((category) => category.id === params.category)?.label,
   };
-}
-
-export async function generateStaticParams() {
-  return [
-    {category: "mens-clothing"},
-    {category: "womens-clothing"},
-    {category: "jewelery"},
-    {category: "electronics"},
-  ]
 }
 
 export const revalidate = 3600;

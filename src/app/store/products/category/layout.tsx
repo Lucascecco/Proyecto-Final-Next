@@ -1,6 +1,6 @@
 import React from "react";
 import { NavbarSimple } from "@/app/components/mantine/navbar-simple/navbar-simple";
-import { getCategories } from "@/lib/utils";
+import { getCategories } from "@/lib/actions";
 
 type Props = {
   children: React.ReactNode;

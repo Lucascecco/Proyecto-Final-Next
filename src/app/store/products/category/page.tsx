@@ -7,10 +7,9 @@ export const metadata = {
 type Props = {};
 
 export default async function CategoryPage({}: Props) {
-
   return (
     <div className="flex w-full justify-center m-4">
-      <span className="text-2xl">Selecccione una categoría</span>
+      <span className="text-2xl">Seleccione una categoría</span>
     </div>
   );
 }

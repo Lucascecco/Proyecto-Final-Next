@@ -1,4 +1,4 @@
-import { ProductType } from "@/lib/utils";
+import { ProductType } from "@/lib/actions";
 import Image from "next/image";
 import React from "react";
 import StarRating from "./star-rating";
@@ -58,7 +58,7 @@ export default function ItemDetail({ product }: Props) {
               </div>
 
               <div className="mt-5 flex items-center">
-                <ItemQuantity product={product} stock={product.stock} />
+                <ItemQuantity product={product} />
               </div>
             </div>
 

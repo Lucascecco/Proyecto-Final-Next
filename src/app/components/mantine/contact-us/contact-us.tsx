@@ -20,6 +20,7 @@ import { useDisclosure } from "@mantine/hooks";
 export function ContactUs() {
   const [opened, { open, close }] = useDisclosure(false);
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState(false);
   const router = useRouter();
   const [values, setValues] = useState({
     name: "",
@@ -102,7 +103,7 @@ export function ContactUs() {
                 <TextInput
                   name="email"
                   label="E-mail"
-                  placeholder="contacto@gmail.com"
+                  placeholder="yo@example.com"
                   required
                   onChange={handleChange}
                 />

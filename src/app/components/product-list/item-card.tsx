@@ -4,7 +4,7 @@ import Link from "next/link";
 import React from "react";
 import StarRating from "../item-detail/star-rating";
 import { Button } from "@mantine/core";
-import { ProductType } from "@/lib/utils";
+import { ProductType } from "@/lib/actions";
 import AddToCartButton from "./add-to-cart-button";
 
 type Props = {
@@ -74,6 +74,7 @@ export default function ItemCard({ product, quantity, removeButton, noButton }: 
             product={product}
             quantity={quantity ? quantity : 1}
             removeButton={removeButton? true : false}
+            disabled={product.stock <= 0}
           />
         )}
       </div>

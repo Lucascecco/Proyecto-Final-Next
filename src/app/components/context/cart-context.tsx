@@ -1,6 +1,6 @@
 "use client";
 
-import { ProductType } from "@/lib/utils";
+import { ProductType } from "@/lib/actions";
 import React, { ReactNode, createContext, useContext, useState } from "react";
 
 type Props = {

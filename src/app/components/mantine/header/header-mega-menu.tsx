@@ -1,27 +1,21 @@
 "use client";
 
 import {
-  HoverCard,
   Group,
   Button,
-  UnstyledButton,
-  Text,
-  SimpleGrid,
-  ThemeIcon,
-  Anchor,
   Divider,
-  Center,
   Box,
   Burger,
   Drawer,
-  Collapse,
   ScrollArea,
   rem,
-  useMantineTheme,
+  Loader,
+  Stack,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import classes from "./header-mega-menu.module.css";
 import Link from "next/link";
+import { useAuthContext } from "../../context/auth-context";
 
 const links = [
   { link: "/store", label: "Tienda" },
@@ -31,6 +25,7 @@ const links = [
 ];
 
 export function HeaderMegaMenu() {
+  const { user } = useAuthContext();
   const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] =
     useDisclosure(false);
 
@@ -38,7 +33,7 @@ export function HeaderMegaMenu() {
     <Box pb={0} className="fixed top-0 z-50 bg-white/70 backdrop-blur w-full">
       <header className={classes.header}>
         <Group justify="space-between" h="100%">
-          <Link href={"/"} className="text-2xl font-bold">
+          <Link href={"/"} className="text-2xl font-bold flex-grow basis-0">
             {" "}
             CoderStore
           </Link>
@@ -50,12 +45,38 @@ export function HeaderMegaMenu() {
             ))}
           </Group>
 
-          {/* <Group visibleFrom="sm">
-            <Button variant="default">Log in</Button>
-            <Link href={"/admin"}>
-              <Button>Admin</Button>
-            </Link>
-          </Group> */}
+          {user ? (
+            user.logged ? (
+              <Group visibleFrom="sm" className="justify-end flex-grow basis-0">
+                <Link
+                  href={"/user"}
+                  className={`${classes.link} px-0 font-normal`}
+                >
+                  <Stack justify="center" align="end" gap={0}>
+                    <span className="font-bold">{user.name}</span>
+                    <span className="text-xs">{user.email}</span>
+                  </Stack>
+                </Link>
+                {user.administrator && (
+                  <Link href={"/admin"}>
+                    <Button variant="default">Panel</Button>
+                  </Link>
+                )}
+              </Group>
+            ) : (
+              <Group visibleFrom="sm" className="justify-end flex-grow basis-0">
+                <Link href={"/user"}>
+                  <Button variant="default">Ingresar</Button>
+                </Link>
+              </Group>
+            )
+          ) : (
+            <Group visibleFrom="sm" className="justify-end flex-grow basis-0">
+              <Link href={"/user"}>
+                <Loader className="mr-4" size={25} color="blue" type="bars" />
+              </Link>
+            </Group>
+          )}
 
           <Burger
             opened={drawerOpened}
@@ -70,7 +91,7 @@ export function HeaderMegaMenu() {
         onClose={closeDrawer}
         size="100%"
         padding="md"
-        title="Navigation"
+        title="Navegación"
         hiddenFrom="sm"
         zIndex={1000000}
       >
@@ -89,13 +110,33 @@ export function HeaderMegaMenu() {
           ))}
 
           <Divider my="sm" />
+          {user && user.logged ? (
+            <Stack justify="center" pb="xl" px="md">
+              <Link
+                href={"/user"}
+                className={`${classes.link} p-0 font-normal`}
+              >
+                <Stack justify="center" gap={0}>
+                  <span className="font-bold">{user.name}</span>
+                  <span className="text-xs">{user.email}</span>
+                </Stack>
+              </Link>
 
-          {/* <Group justify="center" grow pb="xl" px="md">
-            <Button variant="default">Log in</Button>
-            <Link href={"/admin"}>
-              <Button>Sign up</Button>
-            </Link>
-          </Group> */}
+              {user.administrator && (
+                <Group justify="center" grow pb="xl">
+                  <Link href={"/admin"}>
+                    <Button variant="default">Panel de Administración</Button>
+                  </Link>
+                </Group>
+              )}
+            </Stack>
+          ) : (
+            <Group>
+              <Link href={"/user"}>
+                <Button variant="default">Ingresar</Button>
+              </Link>
+            </Group>
+          )}
         </ScrollArea>
       </Drawer>
     </Box>

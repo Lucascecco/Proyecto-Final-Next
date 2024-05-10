@@ -2,6 +2,10 @@ import { Text } from "@mantine/core";
 
 type Props = {};
 
+export const metadata = {
+  title: "Formulario enviado",
+};
+
 export default function SuccessPage({}: Props) {
   return (
     <div className="flex justify-center items-center w-full h-screen">
